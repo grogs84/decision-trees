@@ -1,5 +1,9 @@
+import matplotlib.pyplot as plt
+
 from data_sets import iris, gini_data
 from functions import gini_impurity, gini_gain, feature_splits, split, distribution_from_array, np
+from plotting import Graph
+
 
 def test_iris_split():
 	x = iris.data[:,0]
@@ -27,9 +31,11 @@ def test_iris_split():
 	l = distribution_from_array(best_l)
 	r = distribution_from_array(best_r)
 	print "left leaf count: {}".format(len(best_l))
+	print best_l
 	print l
 	print "\n"
 	print "right leaf count: {}".format(len(best_r))
+	print best_r
 	print r
 	print "\n"
 
@@ -65,7 +71,35 @@ def test_gini_data_split():
 	print r
 	print "\n"
 
+
+def test_plot_iris():
+	x = iris.data[:,:2]
+	y = iris.target
+
+	u = np.unique(y)
+	c = ('blue', 'red', 'yellow')
+
+	t = {}
+	for k,v in zip(u,c):
+		t[k]=v
+
+
+
+	plt.figure(2, figsize=(8,8))
+
+	for pt, color in zip(x,y):
+		plt.scatter(pt[0], pt[1], c=t[color])
+
+	plt.plot([5.4,5.4], [2, 4.5], 'k-')
+
+	plt.show()
+
+	f = raw_input("")
+
+
+
 if __name__ == "__main__":
-	test_iris_split()
-	test_gini_data_split()
+	# test_iris_split()
+	# test_gini_data_split()
+	test_plot_iris()
 

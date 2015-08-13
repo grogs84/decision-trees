@@ -22,7 +22,6 @@ def gini_gain(array, splits):
     return gini_impurity(array) - splits_impurity
 
 
-
 def feature_splits(x, y):
 	"""calculates all the possible feature splits using brute force"""
 	splits = []
@@ -39,3 +38,5 @@ def split(X, Y, splitval):
     lesser = [y for x,y in zip(X, Y) if x < splitval]
     greater_equal = [y for x,y in zip(X, Y) if x >= splitval]
     return lesser, greater_equal
+
+
