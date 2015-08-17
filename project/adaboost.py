@@ -1,6 +1,7 @@
 from __future__ import division
 import numpy as np
 
+
 class AdaBoost(object):
 
     def __init__(self, training_set):

@@ -27,9 +27,10 @@ class AdaBoost(object):
 			min_error = np.inf
 			for feature in range(feature_count):
 				stump = Stump(self.x_train[:, feature], self.y_train)
-				if stump.error < min_error:
+				if sum(stump.error) < min_error:
 					min_error = stump.error
 					winner = stump
+			e = (winner.errors*self.weights).sum()
 			self.learners.append(stump)
 
 
@@ -59,6 +60,8 @@ class Stump(object):
 
 		self.lt_predict = mode(lt_elements)[0][0]
 		self.gte_predict = mode(gte_elements)[0][0]
+
+		self.error = np.array([stump.y[i] != stump.predict(stump.x[i]) for i in range(len(stump.x))])
 
 
 	def predict(self, x):

@@ -9,8 +9,13 @@ from decision_trees.project.trees import AdaBoost, Stump
 
 class TestAdaBoost(unittest.TestCase):
 
-	def test_features_are_np_arrays(self):
-		print "foo"
+	def test_features_lables_are_np_arrays(self):
+		X = iris.data
+		y = iris.target
+
+		boost = AdaBoost(X,y)
+		self.assertEqual(X.rows, 'np.ndarray')
+		self.assertEqual(y.type, 'np.ndarray')
 
 
 
