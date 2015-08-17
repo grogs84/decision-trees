@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 
+
 from data_sets import iris, gini_data
 from functions import gini_impurity, gini_gain, feature_splits, split, distribution_from_array, np
 from plotting import Graph
@@ -99,7 +100,7 @@ def test_plot_iris():
 
 
 if __name__ == "__main__":
-	# test_iris_split()
+	test_iris_split()
 	# test_gini_data_split()
-	test_plot_iris()
+	# test_plot_iris()
 
