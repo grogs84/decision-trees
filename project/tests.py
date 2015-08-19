@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from data_sets import iris, gini_data
 from functions import gini_impurity, gini_gain, feature_splits, split, distribution_from_array, np
 from plotting import Graph
-
+from trees import Stump, AdaBoost
 
 def test_iris_split():
 	x = iris.data[:,0]
@@ -99,8 +99,20 @@ def test_plot_iris():
 
 
 
+def test_adaboost():
+	X = gini_data[0:3]
+	y = gini_data[3]
+
+	ab = AdaBoost(X,y)
+
+	ab.train()
+
+	print len(ab.learners)
+
+
 if __name__ == "__main__":
-	test_iris_split()
+	# test_iris_split()
 	# test_gini_data_split()
 	# test_plot_iris()
+	test_adaboost()
 

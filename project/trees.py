@@ -7,42 +7,51 @@ class AdaBoost(object):
 	def __init__(self, features, lables):
 		self.features = np.array(features)
 		self.lables = np.array(lables)
-		self.rows = len(self.features)
-		self.feature_count = len(self.features[0])
+		self.rows = len(self.features[0])
+		self.feature_count = len(self.features)
 		self.weights = np.ones(self.rows)/self.rows
 		self.alpha = []
 		self.learners = []
 
-		x_train, x_test, y_train, y_test = train_test_split(self.features, self.lables, test_size=0.33)
 
-		self.x_train = x_train
-		self.y_train = y_train
-		self.x_test  = x_test
-		self.y_test  = y_test
+		# x_train, x_test, y_train, y_test = train_test_split(self.features, self.lables, test_size=0.33)
+
+		self.x_train = self.features
+		self.y_train = self.lables
+		# self.x_test  = x_test
+		# self.y_test  = y_test
 		
 
 	def train(self):
 		 # evaluate 50 stumps
-		for i  in range(50):
+		for i  in range(5):
 			min_error = np.inf
-			for feature in range(feature_count):
-				stump = Stump(self.x_train[:, feature], self.y_train)
-				if sum(stump.error) < min_error:
-					min_error = stump.error
+			for feature in range(self.feature_count):
+				stump = Stump(self.x_train[feature], self.y_train, feature)
+				# self.error = np.array([self.y[i] != self.predict(self.x[i]) for i in range(len(self.x))])
+				stump.error = np.array([self.lables[i] != stump.predict(self.features[:,i]) for i in range(self.rows)])
+				if sum(stump.error*self.weights) < min_error:
+					min_error = sum(stump.error*self.weights)
 					winner = stump
-			e = (winner.errors*self.weights).sum()
-			self.learners.append(stump)
 
+			e = (winner.error*self.weights).sum()
+			alpha = 0.5 * np.log((1-e)/e)
+			w = np.zeros(self.rows)
 
+			for i in range(self.rows):
+				if winner.error[i] == 1:
+					w[i] = self.weights[i] * np.exp(alpha)
+				else: 
+					w[i] = self.weights[i] * np.exp(-alpha)
 
-
-
-
-
+			self.weights = w / w.sum()
+			self.learners.append(winner)
+			self.alpha.append(alpha)
+			if alpha < .0001: break
 
 
 class Stump(object):
-	def __init__(self, x, y):
+	def __init__(self, x, y, feature_index):
 		self.x = x
 		self.y = y
 		self.lt_predict = None
@@ -50,7 +59,7 @@ class Stump(object):
 		self.best_split = None
 		self.error = None
 		self.alpha = 0
-
+		self.feature_index = feature_index
 
 		self.start(x,y)
 
@@ -61,10 +70,11 @@ class Stump(object):
 		self.lt_predict = mode(lt_elements)[0][0]
 		self.gte_predict = mode(gte_elements)[0][0]
 
-		self.error = np.array([stump.y[i] != stump.predict(stump.x[i]) for i in range(len(stump.x))])
+		# self.error = np.array([self.y[i] != self.predict(self.x[i]) for i in range(len(self.x))])
 
 
-	def predict(self, x):
+	def predict(self, X):
+		x = X[self.feature_index]
 		if x < self.best_split:
 			return self.lt_predict
 		else:
